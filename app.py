@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request, render_template, session
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
+CORS(app)
 
 # Sample user data (replace with database integration)
 users = {
