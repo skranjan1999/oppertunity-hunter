@@ -4,13 +4,27 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from datetime import datetime
 from flask_cors import CORS
+from dotenv import load_dotenv
+import os
+
+
+# Load environment variables from .env
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 CORS(app)
 
+
+
+
+
 # MongoDB connection
-client = MongoClient("mongodb+srv://skrnitc1999:saurabh12345@cluster0.8ark0.mongodb.net")
+
+# Get MongoDB URI from environment
+mongodb_uri = os.getenv("MONGO_URI")
+
+client = MongoClient(mongodb_uri)
 db = client['job_portal']
 jobs_collection = db['jobs']
 

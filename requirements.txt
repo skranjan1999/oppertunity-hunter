@@ -3,3 +3,4 @@ Werkzeug==2.2.2
 gunicorn==21.2.0
 flask_cors
 pymongo
+python-dotenv
