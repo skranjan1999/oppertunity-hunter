@@ -1,0 +1,28 @@
+<!-- templates/contact.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 700px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 12px;">
+    <h1>Contact Us</h1>
+    <p>We'd love to hear from you! Whether you have a question, feedback, or a partnership proposal — feel free to reach out.</p>
+
+    <form action="mailto:support@jobhunt.com" method="post" enctype="text/plain" style="margin-top: 2rem;">
+        <label for="name">Name</label><br>
+        <input type="text" id="name" name="name" required style="width: 100%; padding: 0.5rem; margin-bottom: 1rem;"><br>
+
+        <label for="email">Email</label><br>
+        <input type="email" id="email" name="email" required style="width: 100%; padding: 0.5rem; margin-bottom: 1rem;"><br>
+
+        <label for="message">Message</label><br>
+        <textarea id="message" name="message" rows="6" required style="width: 100%; padding: 0.5rem;"></textarea><br><br>
+
+        <button type="submit" style="background-color: #1a73e8; color: white; padding: 0.75rem 2rem; border: none; border-radius: 6px;">Send Message</button>
+    </form>
+
+    <div style="margin-top: 2rem;">
+        <p><strong>Email:</strong> oppertunityhunter@gmail.com</p>
+        <p><strong>Phone:</strong> +91-7004598475</p>
+        <!-- <p><strong>Address:</strong> Job Hunt HQ, Tech Park, Bengaluru, India</p> -->
+    </div>
+</div>
+{% endblock %}

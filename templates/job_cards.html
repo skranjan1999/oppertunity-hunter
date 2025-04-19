@@ -1,87 +1,36 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <title>Job Listings</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <script src="/static/script.js" defer></script>
-    <style>
-        .job {
-            border: 1px solid #ccc;
-            padding: 20px;
-            margin: 20px;
-            border-radius: 10px;
-            width: 80%;
-        }
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='job_cards.css') }}">
+{% endblock %}
 
-        .apply-btn {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            padding-inline: 20%;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-    </style>
-</head>
+{% block content %}
 
-<body>
-
-    <div class="navbar">
-        <a href="/" class="logo">
-            <img src="{{ url_for('static', filename='logo.png') }}" alt="Job Hunt Logo" class="logo-image">
-        </a>
-        <button class="nav-toggle" onclick="toggleNav()">☰</button>
-        <div class="nav-links" id="nav-links">
-            <a href="#career">Career</a>
-            <a href="#about">About</a>
-            <a href="#login" onclick="showLoginOptions()">Login</a>
-            <a href="#signup">Signup</a>
+{% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash-message flash-{{ category }}">
+            {{ message }}
         </div>
-    </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
 
-    <h1>Job Listings</h1>
 
-    <div class="job">
-        <h2>{{ role }} </h2>
-        <p><strong>Company:</strong> {{ company }}</p>
-        <p><strong>Package:</strong> {{ package }}</p>
-        <p><strong>Experience:</strong> {{ experience }}</p>
-        <p><strong>Location:</strong> {{ location }}</p>
-        <p><strong>Description:</strong> {{ description }}</p>
-        <p><strong>Responsibilities:</strong> {{ responsibilities }}</p>
-        <p><strong>Skills Required:</strong> {{ skills }}</p>
-        <p><strong>Education:</strong> {{ education }}</p>
-        <a href="{{ link }}" class="apply-btn" target="_blank" rel="noopener noreferrer">Apply</a>
+<h1>Job Details</h1>
 
-    </div>
-
-</body>
-<footer class="footer">
-    <div class="footer-container">
-        <p>&copy; {{ current_year }} Job Hunt. All rights reserved.</p>
-
-        <div class="footer-links">
-            <a href="#career">Career</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
-            <a href="#privacy">Privacy Policy</a>
-        </div>
-
-        <div class="social-icons">
-            <a href="https://www.linkedin.com" target="_blank" rel="noopener noreferrer"><i
-                    class="fab fa-linkedin"></i></a>
-            <a href="https://chat.whatsapp.com/YOUR_GROUP_INVITE_LINK" target="_blank" rel="noopener noreferrer"><i
-                    class="fab fa-whatsapp"></i></a>
-            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><i
-                    class="fab fa-instagram"></i></a>
-            <a href="https://t.me/YOUR_TELEGRAM_CHANNEL" target="_blank" rel="noopener noreferrer"><i
-                    class="fab fa-telegram"></i></a>
-        </div>
-    </div>
-</footer>
-
-</html>
+<div class="job">
+    <h2>{{ role }}</h2>
+    <p><strong>Company:</strong> {{ company }}</p>
+    <p><strong>Package:</strong> {{ package }}</p>
+    <p><strong>Experience:</strong> {{ experience }}</p>
+    <p><strong>Location:</strong> {{ location }}</p>
+    <p><strong>Description:</strong> {{ description }}</p>
+    <p><strong>Responsibilities:</strong> {{ responsibilities }}</p>
+    <p><strong>Skills Required:</strong> {{ skills }}</p>
+    <p><strong>Education:</strong> {{ education }}</p>
+    <a href="{{ link }}" class="apply-btn" target="_blank" rel="noopener noreferrer">Apply</a>
+</div>
+{% endblock %}

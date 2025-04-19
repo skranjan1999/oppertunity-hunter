@@ -1,159 +1,166 @@
-from flask import Flask, jsonify, request, render_template, session
+from flask import Flask, jsonify, request, render_template, session, redirect, url_for, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+from datetime import datetime
 from flask_cors import CORS
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 CORS(app)
 
-# Sample user data (replace with database integration)
-users = {
-    'admin': {'password': generate_password_hash('admin123'), 'role': 'admin'},
-    'user': {'password': generate_password_hash('user123'), 'role': 'user'}
-}
+# MongoDB connection
+client = MongoClient("mongodb+srv://skrnitc1999:saurabh12345@cluster0.8ark0.mongodb.net")
+db = client['job_portal']
+jobs_collection = db['jobs']
 
-# Sample job data (replace with database queries later)
-jobs = {
-    1 : {
-        "id":1,
-    "role": "Software Engineer",
-    "company": "Tech Corp",
-    "package": "12 LPA",
-    "experience": "2+ years",
-    "location": "Bangalore",
-    "description": "Develop and maintain web applications.",
-    "responsibilities": "Write clean code, collaborate with teams.",
-    "skills": "Python, Flask, React",
-    "education": "B.Tech in Computer Science",
-    "link" : "https://jobs.smartrecruiters.com/AbstrabitTechnologiesPvtLtd/744000052023820-full-stack-engineer-0-to-2-years-remote-opportunity"
-}
-
-}
-
-@app.route('/login', methods=['POST'])
-def login():
-    data = request.json
-    username = data.get('username')
-    password = data.get('password')
-    
-    if username in users and check_password_hash(users[username]['password'], password):
-        session['username'] = username
-        session['role'] = users[username]['role']
-        return jsonify({'message': 'Login successful', 'role': users[username]['role']})
-    return jsonify({'message': 'Invalid credentials'}), 401
-
-@app.route('/logout')
-def logout():
-    session.clear()
-    return jsonify({'message': 'Logged out'})
-
-
-
-
-@app.route('/update_job', methods=['GET'])
-def update_job():
-    return render_template("update.html")
-
-
-
-
-
+# ---------------- Home Page (Display Jobs) ---------------- #
 @app.route('/')
 def index():
-    return render_template('index.html', jobs = jobs)
+    current_year = datetime.now().year
+    jobs = jobs_collection.find().sort('_id', -1)  # Show latest jobs first
+    return render_template('index.html', jobs=jobs, current_year = current_year)
 
 
 
 
 
-@app.route("/jobs/<index>", methods=['GET'])
-def lwstudentinfo(index):
-    if int(index) <= 0:
-        return "Not Exists"
-    elif int(index) in jobs:
-        return render_template(
-                        "job_cards.html",
-                        id = jobs[int(index)]['id'],
-                        role = jobs[int(index)]['role'],
-                        company = jobs[int(index)]['company'],
-                        package = jobs[int(index)]['package'],
-                        experience = jobs[int(index)]["experience" ],
-                        location = jobs[int(index)]["location" ],
-                        description = jobs[int(index)]["description" ],
-                        responsibilities = jobs[int(index)]["responsibilities" ],
-                        skills = jobs[int(index)]["skills" ],
-                        education = jobs[int(index)]["education" ],
-                        link = jobs[int(index)]["link" ],
-                       
-                        )
-    else:
-        return "Not Exists"
+
+
+# ---------------- Admin Panel - View/Add/Delete ---------------- #
+@app.route('/update_jobs', methods=['GET'])
+def update_jobs():
+    jobs = list(jobs_collection.find().sort('_id', -1))
+    for job in jobs:
+        job['_id'] = str(job['_id'])  # convert ObjectId to string for HTML
+    return render_template("update.html", jobs=jobs)
 
 
 
 
 
+
+
+
+@app.route('/add_job', methods=['POST'])
+def add_job():
+    try:
+        job_data = {
+        'role': request.form['role'],
+        'company': request.form['company'],
+        'package': request.form['package'],
+        'experience': request.form['experience'],
+        'location': request.form['location'],
+        'skills': request.form['skills'],
+        'education': request.form['education'],
+        'link': request.form['link']
+    }
+        jobs_collection.insert_one(job_data)
+        flash("Job added successfully!", "success")
+    except:
+        flash("Failed to add job.", "error")
+    return redirect('/update_jobs')
+
+@app.route('/delete_job/<job_id>', methods=['POST'])
+def delete_job(job_id):
+    jobs_collection.delete_one({'_id': ObjectId(job_id)})
+    return redirect(url_for('update_jobs'))
+
+
+
+
+
+
+
+
+# ---------------- View Job Details ---------------- #
+# @app.route("/jobs/<job_id>", methods=['GET'])
+# def job_details(job_id):
+#     job = jobs_collection.find_one({'_id': ObjectId(job_id)})
+#     if not job:
+#         return "Job does not exist."
+#     return render_template("job_cards.html", **job)
+
+
+@app.route("/jobs/<job_id>", methods=['GET'])
+def job_details(job_id):
+    job = jobs_collection.find_one({'_id': ObjectId(job_id)})
+    if not job:
+        flash("Job not found. It may have been removed.", "error")
+        return redirect(url_for('index'))  # Replace 'index' with your home route function name
+    return render_template("job_cards.html", **job)
+
+
+
+
+# ---------------- Optional: Admin Quick Entry ---------------- #
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if request.method == 'POST':
-        if request.form:
-            id = request.form['id']
-            role =  request.form['role'],
-            company = request.form['company'],
-            package = request.form['package'],
-            experience = request.form['experience'],
-            location =  request.form['location'],
-            description = request.form['description'],
-            responsibilities =  request.form['responsibilities'],
-            skills = request.form['skills'],
-            education = request.form['education']
-            link = request.form['link']
+        data = request.form.to_dict()
+        jobs_collection.insert_one(data)
+        return "Job Created."
+    return redirect(url_for('update_jobs'))
 
-
-
-            nextId =  list ( jobs.keys( ) ) [ -1 ]  + 1 
-
-            jobs[nextId] = {
-                'id' : id,
-                'role': request.form['role'],
-                'company': company,
-                'package': request.form['package'],
-                'experience': request.form['experience'],
-                'location': request.form['location'],
-                'description': request.form['description'],
-                'responsibilities': request.form['responsibilities'],
-                'skills': request.form['skills'],
-                'education': request.form['education'],
-                'link': link
-            }
-
-            print(request.form)
-
-        elif request.json:
-            jobs[list ( jobs.keys( ) ) [ -1 ]  + 1 ]  =  request.json
-
-        else:
-            print("not supported")
-            return 'not supported'
-    return "Job Created.."
-
-
-
-
-@app.route("/jobs/delete/<index>", methods=['DELETE'])
-def lwstudentdelete(index):
-    if int(index) in jobs:
-        del jobs[int(index)]
-
-    else:
-        return "ID not Exist"
-
-    return "record deleted..."
+# ---------------- Optional: API for Deletion ---------------- #
+@app.route("/jobs/delete/<job_id>", methods=['DELETE'])
+def delete_job_api(job_id):
+    result = jobs_collection.delete_one({'_id': ObjectId(job_id)})
+    if result.deleted_count == 0:
+        return "Job ID does not exist."
+    return "Job deleted."
 
 
 
 
 
 
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+
+
+
+
+
+@app.route('/privacy')
+def privacy():
+    return render_template('privacy.html')
+
+
+
+
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+
+
+
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+    if request.method == 'POST':
+        # Handle signup logic (store user, validate, etc.)
+        return redirect(url_for('login'))
+    return render_template('signup.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # Handle login logic (authentication, session, etc.)
+        return redirect(url_for('index'))
+    return render_template('login.html')
+
+
+
+
+
+# ---------------- Run Server ---------------- #
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

@@ -1,177 +1,205 @@
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    background: #f8f9fa;
+    color: #333;
   }
+  
+  h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #222;
+  }
+  
+  /* Navbar */
   .navbar {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    background-color: #a3c9ee;
+    justify-content: space-between;
+    background-color: #1e3a8a;
     padding: 10px 20px;
     color: white;
+    flex-wrap: wrap;
   }
+  
   .logo-image {
     height: 40px;
-    transition: all 0.3s;
   }
-  .logo-image:hover {
-    transform: scale(1.1);
+  
+  .nav-links {
+    display: flex;
+    gap: 20px;
   }
+  
+  .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 12px;
+    transition: background 0.3s ease;
+  }
+  
+  .nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+  }
+  
   .nav-toggle {
-    font-size: 24px;
     background: none;
     border: none;
+    font-size: 24px;
     color: white;
-    cursor: pointer;
     display: none;
   }
-  .nav-links a {
-    margin: 0 15px;
-    text-decoration: none;
+  
+
+  .dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode .navbar {
+    background-color: #1e1e1e;
+    color: #fff;
+}
+
+.dark-mode a {
+    color: #bb86fc;
+}
+
+.dark-toggle {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
     color: white;
-    font-size: 16px;
-    transition: color 0.3s;
-  }
-  .nav-links a:hover {
-    color: #f39c12;
-  }
-
-
-
-  .main_image{
-    display: flex;
-    width: 100%;
-    height: 60vh;
-    margin: auto;
-    padding: auto;
-
 }
 
 
 
-  .job-postings {
-    padding: 20px;
-  }
-  .job-card {
-    border: 1px solid #ccc;
-    margin-bottom: 15px;
-    padding: 10px;
-    border-radius: 5px;
+
+
+
+  /* Main Image */
+  .main_image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-bottom: 3px solid #1e3a8a;
   }
   
-  @media (max-width: 768px) {
-    .nav-toggle {
-      display: block;
-    }
-    .nav-links {
-      display: none;
-      flex-direction: column;
-      width: 100%;
-      background-color: #2c3e50;
-      position: absolute;
-      top: 60px;
-      left: 0;
-      padding: 10px 0;
-    }
-    .nav-links a {
-      padding: 10px;
-      text-align: center;
-    }
-    .nav-links.active {
-      display: flex;
-    }
-
-
-
-  }
-
-
-
-  .job-card-container{
+  /* Job Cards */
+  .job-card-container {
     display: flex;
-    flex-direction: row;
-    justify-content: center;
     flex-wrap: wrap;
-    border-radius: 2px solid black;
-
-    padding-inline: 1%;
-    gap: 1%;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
   }
-
-  .job-card-container h1{
-    text-align: center;
-
+  
+  .job-card {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    width: 300px;
+    padding: 20px;
+    transition: transform 0.3s ease;
   }
-
-  .job-card{
-    text-decoration: none;
-    color: black;
-    display: flex;
-    flex-direction: column;
-    padding: 1%;
-    width: 250px;
-    gap: 0px;
-    padding-inline: 2%;
-    padding-bottom: 2%;
-    cursor: pointer;
-
+  
+  .job-card:hover {
+    transform: translateY(-5px);
   }
-
-  .job-card h2{
-    text-align: center;
+  
+  .job-card h2 {
+    margin-top: 0;
+    color: #1e3a8a;
   }
-
-  .apply-btn{
-    width: 100%;
-    padding: 2%;
+  
+  .job-card p {
+    margin: 8px 0;
+  }
+  
+  .apply-btn {
+    display: inline-block;
+    background-color: #2563eb;
     color: white;
+    padding: 10px 16px;
+    text-align: center;
+    border-radius: 6px;
+    margin-top: 12px;
     text-decoration: none;
-    background-color: blue;
-    align-items: center;
-    text-align: center;
-    border-radius: 20px;
+    transition: background-color 0.3s ease;
   }
-
-
-
+  
+  .apply-btn:hover {
+    background-color: #1d4ed8;
+  }
+  
+  /* Footer */
   .footer {
-    background-color: #f8f8f8;
-    padding: 20px 0;
+    background-color: #1e3a8a;
+    color: white;
+    padding: 20px;
     text-align: center;
-    border-top: 1px solid #ddd;
-    margin-top: 40px;
   }
   
   .footer-container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 15px;
+    max-width: 1200px;
+    margin: auto;
+  }
+  
+  .footer-links {
+    margin-top: 10px;
   }
   
   .footer-links a {
+    color: white;
     margin: 0 10px;
     text-decoration: none;
-    color: #333;
-    font-weight: 500;
   }
   
-  .footer-links a:hover {
-    text-decoration: underline;
-  }
   .social-icons {
     margin-top: 10px;
   }
   
   .social-icons a {
-    color: #333;
+    color: white;
     margin: 0 10px;
-    font-size: 24px;
-    transition: color 0.3s;
+    font-size: 20px;
   }
   
-  .social-icons a:hover {
-    color: #0077b5; /* LinkedIn Blue as default hover */
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      background-color: #1e3a8a;
+      padding: 10px;
+    }
+  
+    .nav-links.show {
+      display: flex;
+    }
+  
+    .nav-toggle {
+      display: block;
+    }
+  
+    .job-card {
+      width: 90%;
+    }
   }
-    
+  
+
+  .flash-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}

@@ -1,41 +1,62 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="/static/script.js" defer></script> -->
-<!-- </head> -->
-<body>
-    <form action="/admin" enctype="multipart/form-data" method="POST">
-        id : <input type="text" name="id" placeholder="1"/> 
-    <br><br>
-    role: <input type="text" name="role" placeholder="Software Engineer"/> 
-    <br><br>
-    "company": <input type="text" name="company" placeholder="company"> 
-    <br><br>
-    "package": <input type="text" name="package" placeholder="Software Engineer"> 
-    <br><br>
-    "experience": <input type="text" name="experience" placeholder="Software Engineer"> 
-    <br><br>
-    "location": <input type="text" name="location" placeholder="Software Engineer"> 
-    <br><br>
-    "description": <input type="text" name="description" placeholder="Software Engineer"> 
-    <br><br>
-    "responsibilities": <input type="text" name="responsibilities" placeholder="Software Engineer"> 
-    <br><br>
-    "skills": <input type="text" name="skills" placeholder="Software Engineer"> 
-    <br><br>
-    "education": <input type="text" name="education" placeholder="Software Engineer"> 
+{% extends "base.html" %}
 
-    <br>
-    <br>
-    "Link": <input type="text" name="link" placeholder="https://"> 
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='update.css') }}">
+{% endblock %}
 
-    <br>
-    <br>
+{% block content %}
 
-    <input type="submit">
-    </form>
-</body>
-<!-- </html> -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash-message flash-{{ category }}">
+              {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% for job in jobs %}
+    <div class="job-card">
+        <h2>{{ job['role'] }}</h2>
+        <p><strong>Company:</strong> {{ job['company'] }}</p>
+        <p><strong>Package:</strong> {{ job['package'] }}</p>
+        <p><strong>Experience:</strong> {{ job['experience'] }}</p>
+        <p><strong>Location:</strong> {{ job['location'] }}</p>
+        <p><strong>Skills:</strong> {{ job['skills'] }}</p>
+        <p><strong>Responsibility:</strong> {{ job['Responsibility'] }}</p>
+        <p><strong>Description:</strong> {{ job['Description'] }}</p>
+        <p><strong>Education:</strong> {{ job['education'] }}</p>
+        <p><strong>Job Link:</strong> <a href="{{ job['link'] }}" target="_blank">{{ job['link'] }}</a></p>
+
+        <form method="POST" action="/delete_job/{{ job['_id'] }}" style="display:inline;">
+            <button class="delete-btn" type="submit">Delete</button>
+        </form>
+
+        <button class="edit-btn" onclick='editJob({{ job | tojson | safe }})'>Edit</button>
+    </div>
+    {% else %}
+    <p>No jobs found.</p>
+    {% endfor %}
+
+    <hr>
+
+    <div class="form-section">
+        <h2>Add / Update Job</h2>
+        <form class="add-form" id="jobForm" method="POST" action="/add_job">
+            <input type="text" name="role" id="role" placeholder="Role" required>
+            <input type="text" name="company" id="company" placeholder="Company" required>
+            <input type="text" name="package" id="package" placeholder="Package" required>
+            <input type="text" name="experience" id="experience" placeholder="Experience" required>
+            <input type="text" name="location" id="location" placeholder="Location" required>
+            <textarea name="skills" id="skills" placeholder="Skills Required" required></textarea>
+            <textarea name="Responsibility" id="Responsibility" placeholder="Responsibility Required" ></textarea>
+            <textarea name="Description" id="Description" placeholder="Description Required" ></textarea>
+            <input type="text" name="education" id="education" placeholder="Education" >
+            <input type="url" name="link" id="link" placeholder="Job Link (https://...)" required>
+            <button class="submit-btn" id="submitBtn" type="submit">Add Job</button>
+        </form>
+    </div>
+
+
+    {% endblock %}
