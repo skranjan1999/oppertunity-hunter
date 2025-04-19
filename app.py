@@ -22,7 +22,7 @@ CORS(app)
 # MongoDB connection
 
 # Get MongoDB URI from environment
-mongodb_uri = os.getenv("MONGO_URI")
+mongodb_uri = os.getenv("MONGODB_URI")
 
 client = MongoClient(mongodb_uri)
 db = client['job_portal']
